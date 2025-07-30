@@ -1,70 +1,199 @@
-# Getting Started with Create React App
+# Odoo 프론트엔드 관리자
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Odoo 데이터베이스 연결과 필수 모듈 로드 과정을 시각적으로 관리할 수 있는 React 애플리케이션입니다.
 
-## Available Scripts
+## 주요 기능
 
-In the project directory, you can run:
+### 🔗 데이터베이스 연결 관리
+- Odoo 서버에 안전한 연결
+- 실시간 연결 상태 모니터링
+- 자동 재연결 기능
+- 세션 관리
 
-### `npm start`
+### 📦 모듈 로드 관리
+- 필수 모듈 자동 로드
+- 모듈 상태 실시간 확인
+- 로드 진행률 시각화
+- 모듈 의존성 순서 관리
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 📊 시각적 모니터링
+- 연결 상태 실시간 표시
+- 모듈 로드 진행률 대시보드
+- 오류 및 경고 메시지 표시
+- 로드된 모듈 목록 확인
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 설치 및 실행
 
-### `npm test`
+### 0. Odoo 백엔드 서버 실행
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. [Odoo 공식 홈페이지](https://www.odoo.com/page/download) 또는 GitHub에서 Odoo 소스코드 다운로드
+2. Python 3.8~3.10 환경 준비 (가상환경 권장)
+3. Odoo 폴더에서 필수 패키지 설치
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. PostgreSQL 설치 및 Odoo용 DB/유저 생성
+   ```sql
+   CREATE USER odoo WITH PASSWORD 'odoo';
+   CREATE DATABASE odoo OWNER odoo;
+   ```
+5. Odoo 서버 실행
+   ```bash
+   python odoo-bin -c odoo.conf
+   # 또는 설정 파일 없이
+   python odoo-bin --addons-path=addons --db_user=odoo --db_password=odoo
+   ```
+6. 브라우저에서 [http://localhost:8069](http://localhost:8069) 접속
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 1. 의존성 설치
+```bash
+npm install
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 2. 환경 변수 설정
+프로젝트 루트에 `.env` 파일을 생성하고 다음 내용을 추가하세요:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```env
+# Odoo 서버 설정
+REACT_APP_ODOO_URL=http://localhost:8069
+REACT_APP_ODOO_DATABASE=your_database_name
 
-### `npm run eject`
+# 개발 모드 설정
+NODE_ENV=development
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+# 로깅 설정
+REACT_APP_LOG_LEVEL=info
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 3. 애플리케이션 실행
+```bash
+npm start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+브라우저에서 `http://localhost:3000`으로 접속하세요.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 사용법
 
-## Learn More
+### 1. Odoo 서버 연결
+1. 사용자명과 비밀번호를 입력
+2. "연결" 버튼 클릭
+3. 연결 상태 확인
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 2. 모듈 로드
+1. 연결 성공 후 자동으로 필수 모듈 로드 시작
+2. 수동으로 "필수 모듈 로드" 버튼 클릭 가능
+3. 로드 진행률 및 결과 확인
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 3. 모듈 상태 확인
+1. 드롭다운에서 확인할 모듈 선택
+2. "상태 확인" 버튼 클릭
+3. 모듈 상태 정보 확인
 
-### Code Splitting
+## 프로젝트 구조
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```
+src/
+├── components/
+│   ├── OdooConnectionManager.js    # 메인 연결 관리 컴포넌트
+│   └── OdooConnectionManager.css   # 스타일 파일
+├── config/
+│   └── odooConfig.js              # Odoo 설정 및 로깅
+├── hooks/
+│   └── useOdooConnection.js       # Odoo 연결 React Hook
+├── utils/
+│   └── odooConnection.js          # Odoo 연결 유틸리티
+├── App.js                         # 메인 앱 컴포넌트
+└── App.css                        # 앱 스타일
+```
 
-### Analyzing the Bundle Size
+## 설정 옵션
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Odoo 서버 설정 (`src/config/odooConfig.js`)
 
-### Making a Progressive Web App
+```javascript
+export const ODOO_CONFIG = {
+  SERVER_URL: 'http://localhost:8069',    // Odoo 서버 URL
+  DATABASE: 'odoo_db',                    // 데이터베이스 이름
+  SESSION_TIMEOUT: 60,                    // 세션 타임아웃 (분)
+  RETRY_CONFIG: {
+    maxRetries: 3,                        // 최대 재시도 횟수
+    retryDelay: 1000,                     // 재시도 간격 (ms)
+  }
+};
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### 필수 모듈 설정
 
-### Advanced Configuration
+```javascript
+export const MODULE_CONFIG = {
+  REQUIRED_MODULES: [
+    'base', 'web', 'mail', 'sale', 
+    'purchase', 'account', 'stock', 'hr'
+  ],
+  LOAD_ORDER: [
+    'base', 'web', 'mail', 'hr',
+    'account', 'stock', 'purchase', 'sale'
+  ]
+};
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 로깅 기능
 
-### Deployment
+애플리케이션은 다음과 같은 로깅 기능을 제공합니다:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- **연결 과정 로깅**: 연결 시도, 성공, 실패 기록
+- **모듈 로드 로깅**: 각 모듈의 로드 상태 및 결과 기록
+- **오류 로깅**: 상세한 오류 정보 및 스택 트레이스
+- **성능 모니터링**: 연결 시간 및 모듈 로드 시간 측정
 
-### `npm run build` fails to minify
+### 로그 레벨 설정
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- `debug`: 상세한 디버그 정보
+- `info`: 일반적인 정보 메시지
+- `warn`: 경고 메시지
+- `error`: 오류 메시지
+
+## 보안 고려사항
+
+1. **환경 변수 사용**: 민감한 정보는 환경 변수로 관리
+2. **HTTPS 연결**: 프로덕션에서는 HTTPS 사용 권장
+3. **세션 관리**: 자동 세션 만료 및 재연결 처리
+4. **입력 검증**: 사용자 입력에 대한 적절한 검증
+
+## 문제 해결
+
+### 연결 실패
+- Odoo 서버가 실행 중인지 확인
+- 서버 URL과 포트가 올바른지 확인
+- 방화벽 설정 확인
+
+### 모듈 로드 실패
+- 모듈이 Odoo에 설치되어 있는지 확인
+- 모듈 의존성이 올바른지 확인
+- Odoo 로그에서 오류 메시지 확인
+
+### 성능 문제
+- 네트워크 연결 상태 확인
+- Odoo 서버 성능 확인
+- 모듈 로드 순서 최적화
+
+## 개발자 정보
+
+이 프로젝트는 React와 Odoo API를 사용하여 개발되었습니다.
+
+### 기술 스택
+- React 19.1.1
+- Axios (HTTP 클라이언트)
+- CSS3 (스타일링)
+
+### 브라우저 지원
+- Chrome (권장)
+- Firefox
+- Safari
+- Edge
+
+## 라이선스
+
+MIT License
